@@ -57,9 +57,9 @@ public interface NumericRange<T extends Number> extends Range<T> {
             throw new IllegalArgumentException();
         }
         NumberFormat format = NumberFormat.getInstance();
-        start = format.parse(firstPart);
-        end = format.parse(secondPart);
-        step = format.parse(lastPart.trim());
+        start = format.parse(firstPart.replaceAll("\\.", ","));
+        end = format.parse(secondPart.replaceAll("\\.", ","));
+        step = format.parse(lastPart.trim().replaceAll("\\.", ","));
         return NumericRange.generateRange(start, end, step, code);
     }
     

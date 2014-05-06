@@ -48,13 +48,20 @@ public interface DiscreteRange<T> extends Range<T> {
             throw new IllegalArgumentException();
         }
         GenericDiscreteRange<String> res = new GenericDiscreteRange();
-        Arrays.stream(s.trim().replaceAll("[{}]", "").split("\\\", \\\"")).forEach(item -> res.append(item));
+        Arrays.stream(s.trim().replaceAll("[{}]", "").split("(\\\", )?\\\"")).forEach(item -> {if (!item.equals("")) res.append(item);});
         return res;
     }
 
     void remove(T item);
-
+    
     void append(T item);
+    
+    default void append(T item, T... items) {
+        append(item);
+        for (T cur : items) {
+            append(cur);
+        }
+    }
 
     default void remove(Collection<T> sub) {
         for (T item : sub) {

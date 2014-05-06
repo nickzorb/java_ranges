@@ -16,12 +16,11 @@
 
 package gr.hua.utils.range.discrete;
 
-import gr.hua.utils.range.Range;
 import gr.hua.utils.range.RangeIterator;
-import java.util.List;
-import java.util.Set;
+import gr.hua.utils.range.numeric.GenericRealRange;
+import gr.hua.utils.range.numeric.NumericRange;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -37,10 +36,15 @@ public class DiscreteRangeTest {
      */
     @Test
     public void testDiscretize() {
-        System.out.println("discretize");
-//        DiscreteRange.discretize(null);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GenericRealRange range = (GenericRealRange) NumericRange.generateRange(1.0, 2.5, 0.25, NumericRange.CLOSED_OPEN);
+        GenericDiscreteRange expResult = new GenericDiscreteRange();
+        RangeIterator t = range.iterate();
+        while (t.hasNext()) {
+            expResult.append(t.next());
+        }
+        GenericDiscreteRange result = new GenericDiscreteRange();
+        DiscreteRange.discretize(range, result);
+        assertEquals(expResult.toString(), result.toString());
     }
 
     /**
@@ -48,190 +52,14 @@ public class DiscreteRangeTest {
      */
     @Test
     public void testCombine() {
-        System.out.println("combine");
-        DiscreteRange.combine(null);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GenericDiscreteRange<String> expResult = new GenericDiscreteRange();
+        expResult.append("apples", "oranges", "pears", "tomatoes");
+        GenericDiscreteRange<String> firstPart = new GenericDiscreteRange();
+        firstPart.append("apples", "oranges");
+        GenericDiscreteRange<String> secondPart = new GenericDiscreteRange();
+        secondPart.append("pears", "tomatoes");
+        GenericDiscreteRange<String> result = new GenericDiscreteRange();
+        DiscreteRange.combine(result, firstPart, secondPart);
+        assertEquals(expResult.toString(), result.toString());
     }
-
-    /**
-     * Test of parseRange method, of class DiscreteRange.
-     */
-    @Test
-    public void testParseRange() {
-        System.out.println("parseRange");
-        String s = "";
-        DiscreteRange<String> expResult = null;
-        DiscreteRange<String> result = DiscreteRange.parseRange(s);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of remove method, of class DiscreteRange.
-     */
-    @Test
-    public void testRemove_GenericType() {
-        System.out.println("remove");
-        Object item = null;
-        DiscreteRange instance = new DiscreteRangeImpl();
-        instance.remove(item);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of append method, of class DiscreteRange.
-     */
-    @Test
-    public void testAppend_GenericType() {
-        System.out.println("append");
-        Object item = null;
-        DiscreteRange instance = new DiscreteRangeImpl();
-        instance.append(item);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of remove method, of class DiscreteRange.
-     */
-    @Test
-    public void testRemove_Collection() {
-        System.out.println("remove");
-        DiscreteRange instance = new DiscreteRangeImpl();
-//        instance.remove(null);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of remove method, of class DiscreteRange.
-     */
-    @Test
-    public void testRemove_DiscreteRange() {
-        System.out.println("remove");
-        DiscreteRange instance = new DiscreteRangeImpl();
-//        instance.remove(null);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of append method, of class DiscreteRange.
-     */
-    @Test
-    public void testAppend_Collection() {
-        System.out.println("append");
-        DiscreteRange instance = new DiscreteRangeImpl();
-//        instance.append(null);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of append method, of class DiscreteRange.
-     */
-    @Test
-    public void testAppend_DiscreteRange() {
-        System.out.println("append");
-        DiscreteRange instance = new DiscreteRangeImpl();
-//        instance.append(null);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of itemSet method, of class DiscreteRange.
-     */
-    @Test
-    public void testItemSet() {
-        System.out.println("itemSet");
-        DiscreteRange instance = new DiscreteRangeImpl();
-        Set expResult = null;
-        Set result = instance.itemSet();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of split method, of class DiscreteRange.
-     */
-    @Test
-    public void testSplit() {
-        System.out.println("split");
-        Object sub = null;
-//        DiscreteRange instance = new DiscreteRangeImpl();
-//        List<DiscreteRange<T>> expResult = null;
-//        List<DiscreteRange<T>> result = instance.split(sub);
-//        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toString method, of class DiscreteRange.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        DiscreteRange instance = new DiscreteRangeImpl();
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    public class DiscreteRangeImpl<String> implements DiscreteRange<String> {
-
-        @Override
-        public void remove(String item) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public void append(String item) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public Set<String> itemSet() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public List<DiscreteRange<String>> split(String sub) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean empty() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public boolean contains(String item) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public RangeIterator<String> iterate() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public Range<String> clone() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public int estimateSize() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-    }
-    
 }

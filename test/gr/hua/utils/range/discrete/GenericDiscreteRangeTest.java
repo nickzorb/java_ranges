@@ -94,7 +94,12 @@ public class GenericDiscreteRangeTest {
         GenericDiscreteRange<String> instance = new GenericDiscreteRange();
         instance.append(TEST_ARRAY_1);
         RangeIterator<String> iter = instance.iterate();
-        
+        int i = 0;
+        while (iter.hasNext()) {
+            assertEquals(iter.next(), TEST_ARRAY_1.get(i));
+            i++;
+        }
+        assertEquals(i, TEST_ARRAY_1.size());
     }
 
     /**

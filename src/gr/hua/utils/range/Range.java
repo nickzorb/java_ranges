@@ -47,4 +47,7 @@ public interface Range<T> extends Cloneable {
     Range<T> clone();
 
     int estimateSize();
+    
+    @Override
+    String toString();
 }
