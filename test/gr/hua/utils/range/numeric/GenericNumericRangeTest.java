@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package gr.hua.utils.range.numeric;
 
-import gr.hua.utils.range.RangeIterator;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -31,72 +29,10 @@ public class GenericNumericRangeTest {
      */
     @Test
     public void testToString() {
-        GenericNumericRange instance = new GenericNumericRangeImpl();
+        NumericRange<Double> instance = NumericRange.generateRange(135.5, 11351.351, 0.11, NumericRange.CLOSED_OPEN);
         String expResult = "[135.5 - 11351.351) : 0.11";
         String result = instance.toString();
         assertEquals(expResult, result);
     }
-    
-    public void testClone() {
-        GenericNumericRange instance = new GenericNumericRangeImpl();
-        assertEquals(instance.toString(), instance.clone().toString());
-    }
 
-    public class GenericNumericRangeImpl extends GenericNumericRange<Double> {
-
-        public GenericNumericRangeImpl() {
-            super(true, false, 135.5, 11351.351, 0.11);
-        }
-
-        @Override
-        public GenericNumericRange<Double> clone() {
-            return new GenericNumericRangeImpl();
-        }
-
-        @Override
-        public void times(Double mul, boolean increaseStep) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void setStart(Double start, boolean included) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void setEnd(Double end, boolean included) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void transfer(Double dgr) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public boolean empty() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public boolean contains(Double item) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public RangeIterator<Double> iterate() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public int estimateSize() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void divide(Double div, boolean decreaseStep) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-    }
-    
 }

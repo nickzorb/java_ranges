@@ -26,6 +26,8 @@ import static org.junit.Assert.*;
  */
 public class GenericRealRangeTest {
     
+    private static GenericRealRange instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+    
     public GenericRealRangeTest() {
     }
 
@@ -34,13 +36,10 @@ public class GenericRealRangeTest {
      */
     @Test
     public void testClone() {
-        System.out.println("clone");
-        GenericRealRange instance = null;
-        GenericNumericRange<Double> expResult = null;
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+        GenericRealRange expResult = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
         GenericNumericRange<Double> result = instance.clone();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult.toString(), result.toString());
     }
 
     /**
@@ -48,111 +47,12 @@ public class GenericRealRangeTest {
      */
     @Test
     public void testTimes() {
-        System.out.println("times");
-        Double mul = null;
-        boolean increaseStep = false;
-        GenericRealRange instance = null;
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+        Double mul = -3.0;
+        boolean increaseStep = true;
         instance.times(mul, increaseStep);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setStart method, of class GenericRealRange.
-     */
-    @Test
-    public void testSetStart() {
-        System.out.println("setStart");
-        Double start = null;
-        boolean included = false;
-        GenericRealRange instance = null;
-        instance.setStart(start, included);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setEnd method, of class GenericRealRange.
-     */
-    @Test
-    public void testSetEnd() {
-        System.out.println("setEnd");
-        Double end = null;
-        boolean included = false;
-        GenericRealRange instance = null;
-        instance.setEnd(end, included);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of transfer method, of class GenericRealRange.
-     */
-    @Test
-    public void testTransfer() {
-        System.out.println("transfer");
-        Double dgr = null;
-        GenericRealRange instance = null;
-        instance.transfer(dgr);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of empty method, of class GenericRealRange.
-     */
-    @Test
-    public void testEmpty() {
-        System.out.println("empty");
-        GenericRealRange instance = null;
-        boolean expResult = false;
-        boolean result = instance.empty();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of contains method, of class GenericRealRange.
-     */
-    @Test
-    public void testContains() {
-        System.out.println("contains");
-        Double item = null;
-        GenericRealRange instance = null;
-        boolean expResult = false;
-        boolean result = instance.contains(item);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of iterate method, of class GenericRealRange.
-     */
-    @Test
-    public void testIterate() {
-        System.out.println("iterate");
-        GenericRealRange instance = null;
-        RangeIterator<Double> expResult = null;
-        RangeIterator<Double> result = instance.iterate();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of estimateSize method, of class GenericRealRange.
-     */
-    @Test
-    public void testEstimateSize() {
-        System.out.println("estimateSize");
-        GenericRealRange instance = null;
-        int expResult = 0;
-        int result = instance.estimateSize();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GenericRealRange expResult = new GenericRealRange(true, true, -120.0, -3.0, 3.0);
+        assertEquals(expResult.toString(), instance.toString());
     }
 
     /**
@@ -160,13 +60,108 @@ public class GenericRealRangeTest {
      */
     @Test
     public void testDivide() {
-        System.out.println("divide");
-        Double div = null;
-        boolean decreaseStep = false;
-        GenericRealRange instance = null;
+        instance = new GenericRealRange(true, true, 3.0, 45.0, 3.0);
+        Double div = -3.0;
+        boolean decreaseStep = true;
         instance.divide(div, decreaseStep);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        GenericRealRange expResult = new GenericRealRange(true, true, -15.0, -1.0, 1.0);
+        assertEquals(expResult.toString(), instance.toString());
+    }
+
+    /**
+     * Test of setStart method, of class GenericRealRange.
+     */
+    @Test
+    public void testSetStart() {
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+        Double start = 2.0;
+        boolean included = false;
+        instance.setStart(start, included);
+        GenericRealRange expResult = new GenericRealRange(false, true, 2.0, 40.0, 1.0);
+        assertEquals(expResult.toString(), instance.toString());
+    }
+
+    /**
+     * Test of setEnd method, of class GenericRealRange.
+     */
+    @Test
+    public void testSetEnd() {
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+        Double end = 15.0;
+        boolean included = false;
+        instance.setEnd(end, included);
+        GenericRealRange expResult = new GenericRealRange(true, false, 1.0, 15.0, 1.0);
+        assertEquals(expResult.toString(), instance.toString());
+    }
+
+    /**
+     * Test of transfer method, of class GenericRealRange.
+     */
+    @Test
+    public void testTransfer() {
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+        Double dgr = 4.0;
+        instance.transfer(dgr);
+        GenericRealRange expResult = new GenericRealRange(true, true, 5.0, 44.0, 1.0);
+        assertEquals(expResult.toString(), instance.toString());
+    }
+
+    /**
+     * Test of empty method, of class GenericRealRange.
+     */
+    @Test
+    public void testEmpty() {
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+        boolean expResult = false;
+        boolean result = instance.empty();
+        assertEquals(expResult, result);
+        instance = new GenericRealRange(false, false, 1.0, 2.0, 1.0);
+        expResult = true;
+        result = instance.empty();
+        assertEquals(expResult, result);
+        instance = new GenericRealRange(false, true, 1.0, 1.0, 1.0);
+        expResult = true;
+        result = instance.empty();
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of contains method, of class GenericRealRange.
+     */
+    @Test
+    public void testContains() {
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+        Double item = 1.0;
+        boolean expResult = true;
+        boolean result = instance.contains(item);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of iterate method, of class GenericRealRange.
+     */
+    @Test
+    public void testIterate() {
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+        RangeIterator<Double> result = instance.iterate();
+        for (double i = 1; i <= 40; i++) {
+            assertEquals(i, (double) result.next(), 0.0000000000001);
+        }
+        for (double i = 39; i > 0; i--) {
+            assertEquals(i + 1, (double) result.current(), 0.0000000000001);
+            assertEquals(i, (double) result.previous(), 0.0000000000001);
+        }
+    }
+
+    /**
+     * Test of estimateSize method, of class GenericRealRange.
+     */
+    @Test
+    public void testEstimateSize() {
+        instance = new GenericRealRange(true, true, 1.0, 40.0, 10.5);
+        int expResult = 4;
+        int result = instance.estimateSize();
+        assertEquals(expResult, result);
     }
     
 }

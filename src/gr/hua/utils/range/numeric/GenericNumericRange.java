@@ -39,10 +39,10 @@ public abstract class GenericNumericRange<T extends Number> implements NumericRa
         this.end = end;
         this.step = step;
     }
-    
+
     @Override
     public abstract GenericNumericRange<T> clone();
-    
+
     @Override
     public String toString() {
         StringBuilder res = new StringBuilder();
