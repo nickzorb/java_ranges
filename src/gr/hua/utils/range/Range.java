@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Nick Zorbas.
+ * Copyright 2014 Nikolaos Zormpas.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,18 @@
  */
 package gr.hua.utils.range;
 
-import gr.hua.utils.range.discrete.DiscreteRange;
 import gr.hua.utils.range.numeric.NumericRange;
 import java.text.ParseException;
 
 /**
  *
- * @author NickZorb
+ * @author Nikolaos Zormpas
  * @param <T>
  */
 public interface Range<T> extends Cloneable {
 
     static Range parseString(String s) throws ParseException {
         switch (s.trim().charAt(0)) {
-            case '{':
-                return DiscreteRange.parseRange(s);
             case '[':
             case '(':
                 return NumericRange.parseRange(s);
@@ -41,6 +38,10 @@ public interface Range<T> extends Cloneable {
     boolean empty();
 
     boolean contains(T item);
+    
+    T minSpeed();
+    
+    T maxSpeed();
 
     RangeIterator<T> iterate();
 

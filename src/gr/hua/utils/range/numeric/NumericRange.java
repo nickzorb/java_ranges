@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Nick Zorbas.
+ * Copyright 2014 Nikolaos Zormpas.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,23 +22,27 @@ import java.text.ParseException;
 
 /**
  *
- * @author NickZorb
+ * @author Nikolaos Zormpas
  * @param <T>
  */
 public interface NumericRange<T extends Number> extends Range<T> {
     
-    static final int OPEN_OPEN = 0;
-    static final int OPEN_CLOSED = 1;
-    static final int CLOSED_OPEN = 2;
-    static final int CLOSED_CLOSED = 3;
+    public static enum InclusionType {
+        OPEN_OPEN,
+        OPEN_CLOSED,
+        CLOSED_OPEN,
+        CLOSED_CLOSED
+    }
     
     static NumericRange parseRange(String s) throws ParseException {
-        String firstPart = s.split(" - ")[0];
-        String secondPart = s.split(" - ")[1].split(" : ")[0];
-        String lastPart = s.split(" : ")[1];
+        s = s.replaceAll("\\.", ",");
+        String firstPart = s.split(" - ")[0].trim();
+        String secondPart = s.split(" - ")[1].split(" : ")[0].trim();
+        String lastPart = s.split(" : ")[1].trim();
         Number start;
         Number end;
-        Number step;
+        Number minStep;
+        Number maxStep;
         int code = 0;
         if (firstPart.startsWith("[")) {
             code = 2;
@@ -57,79 +61,96 @@ public interface NumericRange<T extends Number> extends Range<T> {
             throw new IllegalArgumentException();
         }
         NumberFormat format = NumberFormat.getInstance();
-        start = format.parse(firstPart.replaceAll("\\.", ","));
-        end = format.parse(secondPart.replaceAll("\\.", ","));
-        step = format.parse(lastPart.trim().replaceAll("\\.", ","));
-        return NumericRange.generateRange(start, end, step, code);
+        start = format.parse(firstPart);
+        end = format.parse(secondPart);
+        minStep = format.parse(lastPart.split(" / ")[0]);
+        maxStep = format.parse(lastPart.split(" / ")[1]);
+        return NumericRange.generateRange(start, end, minStep, maxStep, code);
     }
     
     static NumericRange<Integer> generateRange(Integer start, Integer end) {
-        return NumericRange.generateRange(start, end, 1, CLOSED_CLOSED);
+        return NumericRange.generateRange(start, end, 1, end - start, InclusionType.CLOSED_CLOSED);
     }
     
-    static NumericRange<Integer> generateRange(Integer start, Integer end, int code) {
-        return NumericRange.generateRange(start, end, 1, code);
+    static NumericRange<Integer> generateRange(Integer start, Integer end, Integer minStep, Integer maxStep) {
+        return NumericRange.generateRange(start, end, minStep, maxStep, InclusionType.CLOSED_CLOSED);
     }
     
-    static NumericRange<Integer> generateRange(Integer start, Integer end, Integer step, int code) {
+    static NumericRange<Integer> generateRange(Integer start, Integer end, InclusionType code) {
+        return NumericRange.generateRange(start, end, 1, end - start, code);
+    }
+    
+    static NumericRange<Integer> generateRange(Integer start, Integer end, Integer minStep, Integer maxStep, InclusionType code) {
         switch (code) {
             case OPEN_OPEN:
-                return new GenericIntegerRange(false, false, start, end, step);
+                return new GenericIntegerRange(false, false, start, end, minStep, maxStep);
             case OPEN_CLOSED:
-                return new GenericIntegerRange(false, true, start, end, step);
+                return new GenericIntegerRange(false, true, start, end, minStep, maxStep);
             case CLOSED_OPEN:
-                return new GenericIntegerRange(true, false, start, end, step);
+                return new GenericIntegerRange(true, false, start, end, minStep, maxStep);
             case CLOSED_CLOSED:
-                return new GenericIntegerRange(true, true, start, end, step);
+                return new GenericIntegerRange(true, true, start, end, minStep, maxStep);
             default:
                 throw new UnsupportedOperationException(); 
         }
     }
     
     static NumericRange<Double> generateRange(Double start, Double end) {
-        return NumericRange.generateRange(start, end, Double.MIN_VALUE, CLOSED_CLOSED);
+        return NumericRange.generateRange(start, end, Double.MIN_VALUE, end - start, InclusionType.CLOSED_CLOSED);
     }
     
-    static NumericRange<Double> generateRange(Double start, Double end, int code) {
-        return NumericRange.generateRange(start, end, Double.MIN_VALUE, code);
+    static NumericRange<Double> generateRange(Double start, Double end, Double minStep, Double maxStep) {
+        return NumericRange.generateRange(start, end, minStep, maxStep, InclusionType.CLOSED_CLOSED);
     }
     
-    static NumericRange<Double> generateRange(Double start, Double end, Double step, int code) {
+    static NumericRange<Double> generateRange(Double start, Double end, InclusionType code) {
+        return NumericRange.generateRange(start, end, Double.MIN_VALUE, end - start, code);
+    }
+    
+    static NumericRange<Double> generateRange(Double start, Double end, Double minStep, Double maxStep, InclusionType code) {
         switch (code) {
             case OPEN_OPEN:
-                return new GenericRealRange(false, false, start, end, step);
+                return new GenericRealRange(false, false, start, end, minStep, maxStep);
             case OPEN_CLOSED:
-                return new GenericRealRange(false, true, start, end, step);
+                return new GenericRealRange(false, true, start, end, minStep, maxStep);
             case CLOSED_OPEN:
-                return new GenericRealRange(true, false, start, end, step);
+                return new GenericRealRange(true, false, start, end, minStep, maxStep);
             case CLOSED_CLOSED:
-                return new GenericRealRange(true, true, start, end, step);
+                return new GenericRealRange(true, true, start, end, minStep, maxStep);
             default:
                 throw new UnsupportedOperationException(); 
         }
     }
     
-    static <E extends Number> NumericRange<Double> generateRange(E start, E end, E step, int code) {
-        return NumericRange.generateRange(start.doubleValue(), end.doubleValue(), step.doubleValue(), code);
+    static <E extends Number> NumericRange<Double> generateRange(E start, E end, E minStep, E maxStep, int code) {
+        return NumericRange.generateRange(start.doubleValue(), end.doubleValue(), minStep.doubleValue(), maxStep.doubleValue(), code);
     }
     
-    void times(T mul, boolean increaseStep);
-    
-    void divide(T div, boolean decreaseStep);
-    
-    default void setStart(T start) {
-        setStart(start, true);
+    default NumericRange<T> times(T mul) {
+        return times(mul, true);
     }
     
-    void setStart(T start, boolean included);
+    NumericRange<T> times(T mul, boolean increaseStep);
     
-    default void setEnd(T end) {
-        setEnd(end, true);
+    default NumericRange<T> divide(T div) {
+        return divide(div, true);
     }
     
-    void setEnd(T end, boolean included);
+    NumericRange<T> divide(T div, boolean decreaseStep);
     
-    void transfer(T dgr);
+    default NumericRange<T> setStart(T start) {
+        return setStart(start, true);
+    }
+    
+    NumericRange<T> setStart(T start, boolean included);
+    
+    default NumericRange<T> setEnd(T end) {
+        return setEnd(end, true);
+    }
+    
+    NumericRange<T> setEnd(T end, boolean included);
+    
+    NumericRange<T> transfer(T dgr);
     
     @Override
     String toString();

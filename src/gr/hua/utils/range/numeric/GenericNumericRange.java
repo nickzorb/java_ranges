@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Nick Zorbas.
+ * Copyright 2014 Nikolaos Zormpas.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package gr.hua.utils.range.numeric;
 
 /**
  *
- * @author NickZorb
+ * @author Nikolaos Zormpas
  * @param <T>
  */
 public abstract class GenericNumericRange<T extends Number> implements NumericRange<T> {
@@ -26,18 +26,22 @@ public abstract class GenericNumericRange<T extends Number> implements NumericRa
     protected boolean endIncluded;
     protected T start;
     protected T end;
-    protected T step;
-    protected int modCount = 0;
+    protected T minStep;
+    protected T maxStep;
 
-    public GenericNumericRange(boolean startIncluded, boolean endIncluded, T start, T end, T step) {
-        if (start == null || end == null || step == null) {
+    public GenericNumericRange(boolean startIncluded, boolean endIncluded, T start, T end, T minStep, T maxStep) {
+        if (start == null || end == null || minStep == null || maxStep == null) {
             throw new NullPointerException();
+        }
+        if (start.doubleValue() > end.doubleValue() || minStep.doubleValue() > maxStep.doubleValue() || minStep.doubleValue() <= 0 || minStep.doubleValue() > end.doubleValue() - start.doubleValue()) {
+            throw new IllegalArgumentException();
         }
         this.startIncluded = startIncluded;
         this.endIncluded = endIncluded;
         this.start = start;
         this.end = end;
-        this.step = step;
+        this.minStep = minStep;
+        this.maxStep = maxStep;
     }
 
     @Override
@@ -57,7 +61,7 @@ public abstract class GenericNumericRange<T extends Number> implements NumericRa
         } else {
             res.append(')');
         }
-        res.append(" : ").append(step);
+        res.append(" : ").append(minStep).append(" / ").append(maxStep);
         return res.toString();
     }
 }
