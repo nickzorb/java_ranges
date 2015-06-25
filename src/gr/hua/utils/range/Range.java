@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Nikolaos Zormpas.
+ * Copyright 2015 Nikolaos Zormpas.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
  */
 package gr.hua.utils.range;
 
-import gr.hua.utils.range.numeric.NumericRange;
-import java.text.ParseException;
-
 /**
  *
  * @author Nikolaos Zormpas
@@ -25,30 +22,24 @@ import java.text.ParseException;
  */
 public interface Range<T> extends Cloneable {
 
-    static Range parseString(String s) throws ParseException {
-        switch (s.trim().charAt(0)) {
-            case '[':
-            case '(':
-                return NumericRange.parseRange(s);
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
+    T min();
+
+    T max();
+
+    T step();
+
+    Long maxSpeed();
+
+    long size();
 
     boolean empty();
 
     boolean contains(T item);
-    
-    T minSpeed();
-    
-    T maxSpeed();
 
     RangeIterator<T> iterate();
 
     Range<T> clone();
 
-    int estimateSize();
-    
     @Override
     String toString();
 }

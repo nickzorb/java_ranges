@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Nikolaos Zormpas.
+ * Copyright 2015 Nikolaos Zormpas.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,25 +24,24 @@ import java.util.Iterator;
  */
 public interface RangeIterator<T> extends Iterator<T>, Cloneable {
 
+    boolean hasPrevious();
+
     T previous();
 
     T current();
 
-    void setSpeed(T speed);
-    
-    T getSpeed();
-    
-    T minSpeed();
-    
-    T maxSpeed();
-    
-    void setCurrent(T item);
-    
-    default void reset() {
-        setCurrent(null);
-    }
+    void current(T item);
 
-    boolean hasPrevious();
+    Long speed();
+
+    void speed(Long speed);
+
+    Long maxSpeed();
+
+    default void reset() {
+        current(null);
+        speed(1L);
+    }
 
     RangeIterator clone();
 }
