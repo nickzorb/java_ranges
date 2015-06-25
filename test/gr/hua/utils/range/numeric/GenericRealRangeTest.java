@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author NickZorb
+ * @author Nikolaos Zormpas
  */
 public class GenericRealRangeTest {
 

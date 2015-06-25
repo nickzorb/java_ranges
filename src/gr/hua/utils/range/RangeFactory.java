@@ -20,7 +20,7 @@ import java.text.ParseException;
 
 /**
  *
- * @author NickZorb
+ * @author Nikolaos Zormpas
  */
 public class RangeFactory {
 
