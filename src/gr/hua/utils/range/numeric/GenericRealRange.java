@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Nikolaos Zormpas.
+ * Copyright 2015 Nikolaos Zormpas.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,27 +24,12 @@ import java.util.NoSuchElementException;
  */
 public class GenericRealRange extends GenericNumericRange<Double> {
 
-    private class GenericRealRangeIterator implements RangeIterator<Double> {
-        
-        private Double cur = null;
-        private Double step;
-
-        public GenericRealRangeIterator() {
-            step = GenericRealRange.this.minStep;
-        }
+    private class GenericRealRangeIterator extends GenericNumericIterator {
 
         @Override
         public Double previous() {
             if (hasPrevious()) {
-                cur -=  step;
-                return cur;
-            }
-            throw new NoSuchElementException();
-        }
-
-        @Override
-        public Double current() {
-            if (cur != null) {
+                cur -= step * speed;
                 return cur;
             }
             throw new NoSuchElementException();
@@ -53,105 +38,57 @@ public class GenericRealRange extends GenericNumericRange<Double> {
         @Override
         public Double next() {
             if (hasNext()) {
-                cur = cur == null ? GenericRealRange.this.startIncluded ? GenericRealRange.this.start :  GenericRealRange.this.start +  step : cur +  step;
+                cur = cur == null ? startIncluded ? start : start + step * speed : cur + step * speed;
                 return cur;
             }
             throw new NoSuchElementException();
         }
 
         @Override
-        public void setCurrent(Double item) {
-            if (item == null || GenericRealRange.this.contains(item)) {
-                cur = item;
-            }
-            throw new NoSuchElementException();
-        }
-
-        @Override
         public boolean hasPrevious() {
-            return cur != null && cur - step >= (GenericRealRange.this.startIncluded ? GenericRealRange.this.start : GenericRealRange.this.start + step);
+            return cur != null && cur - step * speed >= (startIncluded ? start : start + step * speed);
         }
 
         @Override
         public boolean hasNext() {
-            return (cur == null && !GenericRealRange.this.empty()) || cur + step <= (GenericRealRange.this.endIncluded ? GenericRealRange.this.end : GenericRealRange.this.end - step);
-        }
-
-        @Override
-        public void setSpeed(Double step) {
-            this.step = step;
-        }
-
-        @Override
-        public Double getSpeed() {
-            return step;
-        }
-
-        @Override
-        public Double minSpeed() {
-            return GenericRealRange.this.minStep;
-        }
-
-        @Override
-        public Double maxSpeed() {
-            return GenericRealRange.this.maxStep;
+            return (cur == null && !empty()) || cur + step * speed <= (endIncluded ? end : end - step * speed);
         }
 
         @Override
         public RangeIterator clone() {
             GenericRealRangeIterator res = new GenericRealRangeIterator();
-            res.setCurrent(cur);
-            res.setSpeed(step);
+            res.current(cur);
+            res.speed(speed);
             return res;
         }
     }
 
-    public GenericRealRange(boolean startIncluded, boolean endIncluded, Double start, Double end, Double minStep, Double maxStep) {
-        super(startIncluded, endIncluded, start, end, minStep, maxStep);
-        while (this.maxStep > end - start) {
-            this.maxStep--;
-        }
+    public GenericRealRange(boolean startIncluded, boolean endIncluded, Double start, Double end, Double step, Long maxSpeed) {
+        super(startIncluded, endIncluded, start, end, step, maxSpeed);
     }
 
     @Override
     public GenericNumericRange<Double> clone() {
-        return new GenericRealRange(startIncluded, endIncluded, start, end, minStep, maxStep);
+        return new GenericRealRange(startIncluded, endIncluded, start, end, step, maxSpeed);
     }
-    
+
     @Override
     public NumericRange<Double> times(Double mul, boolean alterStep) {
-        Double newStart = start * mul;
-        Double newEnd = end * mul;
+        double newStart = start * mul;
+        double newEnd = end * mul;
         if (newStart > newEnd) {
             newStart += newEnd;
             newEnd = newStart - newEnd;
             newStart -= newEnd;
+            startIncluded ^= endIncluded;
+            endIncluded ^= startIncluded;
+            startIncluded ^= endIncluded;
         }
-        Double newMinStep = minStep;
-        Double newMaxStep = maxStep;
+        double newStep = step;
         if (alterStep) {
-            Math.abs(newMinStep *= mul);
-            Math.abs(newMaxStep *= mul);
+            newStep = Math.abs(step * mul);
         }
-        return new GenericRealRange(startIncluded, endIncluded, newStart, newEnd, newMinStep, newMaxStep);
-    }
-    
-    @Override
-    public NumericRange<Double> divide(Double div, boolean alterStep) {
-        Double newStart = start / div;
-        Double newEnd = end / div;
-        if (newStart > newEnd) {
-            newStart += newEnd;
-            newEnd = newStart - newEnd;
-            newStart -= newEnd;
-        }
-        Double newMinStep = minStep;
-        Double newMaxStep = maxStep;
-        if (alterStep) {
-            Math.abs(newMinStep /= div);
-            Math.abs(newMaxStep /= div);
-        }
-        return new GenericRealRange(startIncluded, endIncluded, newStart, newEnd, newMinStep, newMaxStep);
+        return new GenericRealRange(startIncluded, endIncluded, newStart, newEnd, newStep, maxSpeed);
     }
 
     @Override
@@ -159,7 +96,7 @@ public class GenericRealRange extends GenericNumericRange<Double> {
         if (start > end) {
             throw new IllegalArgumentException();
         }
-        return new GenericRealRange(included, endIncluded, start, end, minStep, maxStep);
+        return new GenericRealRange(included, endIncluded, start, end, step, maxSpeed);
     }
 
     @Override
@@ -167,22 +104,17 @@ public class GenericRealRange extends GenericNumericRange<Double> {
         if (start > end) {
             throw new IllegalArgumentException();
         }
-        return new GenericRealRange(startIncluded, included, start, end, minStep, maxStep);
-    }
-
-    @Override
-    public NumericRange<Double> transfer(Double dgr) {
-        return new GenericRealRange(startIncluded, endIncluded, start + dgr, end + dgr, minStep, maxStep);
+        return new GenericRealRange(startIncluded, included, start, end, step, maxSpeed);
     }
 
     @Override
     public boolean empty() {
-        return (startIncluded ? start : start + minStep) > (endIncluded ? end : end - minStep);
+        return (startIncluded ? start : start + step) > (endIncluded ? end : end - step);
     }
 
     @Override
     public boolean contains(Double item) {
-        return (startIncluded ? start : start + minStep) <= item && (endIncluded ? end : end - minStep) >= item && (item - start) % minStep == 0;
+        return (startIncluded ? start : start + step) <= item && (endIncluded ? end : end - step) >= item && (item - start) % step == 0;
     }
 
     @Override
@@ -191,17 +123,7 @@ public class GenericRealRange extends GenericNumericRange<Double> {
     }
 
     @Override
-    public int estimateSize() {
-        return (int) (((endIncluded ? end : end - minStep) - (startIncluded ? start : start + minStep)) / minStep + 1);
-    }
-
-    @Override
-    public Double minSpeed() {
-        return minStep;
-    }
-
-    @Override
-    public Double maxSpeed() {
-        return maxStep;
+    public long size() {
+        return (long) ((((endIncluded ? end : end - step) - (startIncluded ? start : start + step)) / step) + 1);
     }
 }
