@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Nick Zorbas.
+ * Copyright 2015 Nikolaos Zormpas.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package gr.hua.utils.range.numeric;
 
+import gr.hua.utils.range.RangeFactory;
 import gr.hua.utils.range.RangeIterator;
+import java.text.ParseException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -25,101 +26,93 @@ import static org.junit.Assert.*;
  * @author NickZorb
  */
 public class GenericRealRangeTest {
-    
-    private static GenericRealRange instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
-    
+
     public GenericRealRangeTest() {
     }
 
     /**
      * Test of clone method, of class GenericRealRange.
+     *
+     * @throws java.text.ParseException
      */
     @Test
-    public void testClone() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
-        GenericRealRange expResult = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+    public void testClone() throws ParseException {
+        System.out.println("clone");
+        String s = "[0.0/14.5]/1.5/3";
+        GenericRealRange instance = (GenericRealRange) RangeFactory.parseString(s);
         GenericNumericRange<Double> result = instance.clone();
-        assertEquals(expResult.toString(), result.toString());
+        assertEquals(instance, result);
     }
 
     /**
      * Test of times method, of class GenericRealRange.
+     *
+     * @throws java.text.ParseException
      */
     @Test
-    public void testTimes() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
-        Double mul = -3.0;
-        boolean increaseStep = true;
-        instance.times(mul, increaseStep);
-        GenericRealRange expResult = new GenericRealRange(true, true, -120.0, -3.0, 3.0);
-        assertEquals(expResult.toString(), instance.toString());
+    public void testTimes() throws ParseException {
+        System.out.println("times");
+        String s1 = "[0.0/14.5)/1.5/3";
+        String s2 = "(-14.5/0.0]/1.5/3";
+        GenericRealRange instance = (GenericRealRange) RangeFactory.parseString(s1);
+        NumericRange<Double> expResult = (GenericRealRange) RangeFactory.parseString(s2);
+        Double mul = -1.0D;
+        boolean alterStep = true;
+        NumericRange<Double> result = instance.times(mul, alterStep);
+        assertEquals(expResult, result);
     }
-
-    /**
-     * Test of divide method, of class GenericRealRange.
-     */
-    @Test
-    public void testDivide() {
-        instance = new GenericRealRange(true, true, 3.0, 45.0, 3.0);
-        Double div = -3.0;
-        boolean decreaseStep = true;
-        instance.divide(div, decreaseStep);
-        GenericRealRange expResult = new GenericRealRange(true, true, -15.0, -1.0, 1.0);
-        assertEquals(expResult.toString(), instance.toString());
-    }
-
+    
     /**
      * Test of setStart method, of class GenericRealRange.
+     *
+     * @throws java.text.ParseException
      */
     @Test
-    public void testSetStart() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
-        Double start = 2.0;
+    public void testSetStart() throws ParseException {
+        System.out.println("setStart");
+        String s1 = "[0.0/16.1)/4.0/3";
+        String s2 = "(4.2/16.1)/4.0/3";
+        GenericRealRange instance = (GenericRealRange) RangeFactory.parseString(s1);
+        NumericRange<Double> expResult = (GenericRealRange) RangeFactory.parseString(s2);
+        Double start = 4.2D;
         boolean included = false;
-        instance.setStart(start, included);
-        GenericRealRange expResult = new GenericRealRange(false, true, 2.0, 40.0, 1.0);
-        assertEquals(expResult.toString(), instance.toString());
+        NumericRange<Double> result = instance.setStart(start, included);
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of setEnd method, of class GenericRealRange.
+     *
+     * @throws java.text.ParseException
      */
     @Test
-    public void testSetEnd() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
-        Double end = 15.0;
-        boolean included = false;
-        instance.setEnd(end, included);
-        GenericRealRange expResult = new GenericRealRange(true, false, 1.0, 15.0, 1.0);
-        assertEquals(expResult.toString(), instance.toString());
-    }
-
-    /**
-     * Test of transfer method, of class GenericRealRange.
-     */
-    @Test
-    public void testTransfer() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
-        Double dgr = 4.0;
-        instance.transfer(dgr);
-        GenericRealRange expResult = new GenericRealRange(true, true, 5.0, 44.0, 1.0);
-        assertEquals(expResult.toString(), instance.toString());
+    public void testSetEnd() throws ParseException {
+        System.out.println("setEnd");
+        String s1 = "[0.0/16.1)/4.0/3";
+        String s2 = "[0.0/20.4]/4.0/3";
+        GenericRealRange instance = (GenericRealRange) RangeFactory.parseString(s1);
+        NumericRange<Double> expResult = (GenericRealRange) RangeFactory.parseString(s2);
+        Double end = 20.4D;
+        boolean included = true;
+        NumericRange<Double> result = instance.setEnd(end, included);
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of empty method, of class GenericRealRange.
+     *
+     * @throws java.text.ParseException
      */
     @Test
-    public void testEmpty() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
+    public void testEmpty() throws ParseException {
+        System.out.println("empty");
+        String s = "[0.0/15.1]/15.1/3";
+        GenericRealRange instance = (GenericRealRange) RangeFactory.parseString(s);
         boolean expResult = false;
         boolean result = instance.empty();
         assertEquals(expResult, result);
-        instance = new GenericRealRange(false, false, 1.0, 2.0, 1.0);
-        expResult = true;
-        result = instance.empty();
-        assertEquals(expResult, result);
-        instance = new GenericRealRange(false, true, 1.0, 1.0, 1.0);
+        s = "(0.0/15.1)/15.1/3";
+        instance = (GenericRealRange) RangeFactory.parseString(s);
         expResult = true;
         result = instance.empty();
         assertEquals(expResult, result);
@@ -127,41 +120,53 @@ public class GenericRealRangeTest {
 
     /**
      * Test of contains method, of class GenericRealRange.
+     *
+     * @throws java.text.ParseException
      */
     @Test
-    public void testContains() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
-        Double item = 1.0;
-        boolean expResult = true;
+    public void testContains() throws ParseException {
+        System.out.println("contains");
+        String s = "[0.0/15.0]/1.3/3";
+        GenericRealRange instance = (GenericRealRange) RangeFactory.parseString(s);
+        Double item = 1.5D;
+        boolean expResult = false;
         boolean result = instance.contains(item);
+        assertEquals(expResult, result);
+        item = 2.6D;
+        expResult = true;
+        result = instance.contains(item);
         assertEquals(expResult, result);
     }
 
     /**
      * Test of iterate method, of class GenericRealRange.
+     *
+     * @throws java.text.ParseException
      */
     @Test
-    public void testIterate() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 1.0);
-        RangeIterator<Double> result = instance.iterate();
-        for (double i = 1; i <= 40; i++) {
-            assertEquals(i, (double) result.next(), 0.0000000000001);
-        }
-        for (double i = 39; i > 0; i--) {
-            assertEquals(i + 1, (double) result.current(), 0.0000000000001);
-            assertEquals(i, (double) result.previous(), 0.0000000000001);
+    public void testIterate() throws ParseException {
+        System.out.println("iterate");
+        String s = "[0.0/15.0]/1.1/3";
+        GenericRealRange instance = (GenericRealRange) RangeFactory.parseString(s);
+        RangeIterator<Double> iter = instance.iterate();
+        iter.speed(3L);
+        for (Double i = 0.0D; i <= 15D; i += 3.3D) {
+            assertEquals(Math.abs(i - iter.next()) < 0.000001, true);
         }
     }
 
     /**
-     * Test of estimateSize method, of class GenericRealRange.
+     * Test of size method, of class GenericRealRange.
+     *
+     * @throws java.text.ParseException
      */
     @Test
-    public void testEstimateSize() {
-        instance = new GenericRealRange(true, true, 1.0, 40.0, 10.5);
-        int expResult = 4;
-        int result = instance.estimateSize();
+    public void testSize() throws ParseException {
+        System.out.println("size");
+        String s = "[0.0/15.1]/1.0/3";
+        GenericRealRange instance = (GenericRealRange) RangeFactory.parseString(s);
+        long expResult = 16L;
+        long result = instance.size();
         assertEquals(expResult, result);
     }
-    
 }
