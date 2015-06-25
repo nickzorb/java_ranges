@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Nikolaos Zormpas.
+ * Copyright 2015 Nikolaos Zormpas <nickzorb@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package gr.hua.utils.range;
 
 /**
  *
- * @author Nikolaos Zormpas
+ * @author Nikolaos Zormpas <nickzorb@gmail.com>
  * @param <T>
  */
 public interface Range<T> extends Cloneable {

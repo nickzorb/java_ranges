@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Nikolaos Zormpas.
+ * Copyright 2015 Nikolaos Zormpas <nickzorb@gmail.com>.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import java.util.Objects;
 
 /**
  *
- * @author Nikolaos Zormpas
+ * @author Nikolaos Zormpas <nickzorb@gmail.com>
  * @param <T>
  */
 public abstract class GenericNumericRange<T extends Number> implements NumericRange<T> {
