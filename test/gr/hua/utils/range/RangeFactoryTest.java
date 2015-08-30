@@ -41,8 +41,8 @@ public class RangeFactoryTest {
             "(15.5/25.5]/0.35/15",
             "{/15}/5/35",
             "[0/14]/5/35",
-            "{\"test1\" , \"test2\", \"test3\"}",
-            "[0/2]/1/1"};
+            "{\"test1\",\"test2\",\"test3\"}",
+            "{\"test1\",\"test2\",\"test3\"}"};
         for (int i = 0; i < s.length; i += 2) {
             assertEquals(s[i + 1], RangeFactory.parseString(s[i]).toString());
         }

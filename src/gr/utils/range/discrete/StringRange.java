@@ -13,33 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package gr.hua.utils.range;
+package gr.utils.range.discrete;
 
-import gr.hua.utils.range.numeric.NumericRange;
-import gr.utils.range.discrete.StringRange;
+import gr.hua.utils.range.Range;
 import java.text.ParseException;
 
 /**
  *
  * @author Nikolaos Zormpas <nickzorb@gmail.com>
  */
-public class RangeFactory {
+public interface StringRange extends Range<String> {
 
-    public static Range parseString(String s) throws ParseException {
-        s = s.trim();
-        switch (s.charAt(0)) {
-            case '[':
-            case '(':
-                return NumericRange.parseRange(s);
-            case '{':
-                char c = s.charAt(1);
-                if (c != '/') {
-                    return StringRange.parseRange(s);
-                } else {
-                    return NumericRange.parseRange(s);
-                }
-            default:
-                throw new IllegalArgumentException();
-        }
+    static StringRange parseRange(String s) throws ParseException {
+        String[] tokens = s.split("\\\"\\s*,\\s*\\\"");
+        tokens[0] = tokens[0].substring(2);
+        String last = tokens[tokens.length - 1];
+        tokens[tokens.length - 1] = last.substring(0, last.length() - 2);
+        return new GenericStringRange(tokens);
     }
+
+    @Override
+    String toString();
 }

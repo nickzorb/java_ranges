@@ -79,6 +79,10 @@ public interface NumericRange<T extends Number> extends Range<T> {
         return generateRange(start, end, step, maxSpeed, InclusionType.values()[code]);
     }
 
+    static NumericRange basicRange(Integer items) {
+        return generateRange(0L, items - 1L, 1L, 1L, InclusionType.CLOSED_CLOSED);
+    }
+
     static NumericRange basicRange(Long items) {
         return generateRange(0L, items - 1L, 1L, 1L, InclusionType.CLOSED_CLOSED);
     }
